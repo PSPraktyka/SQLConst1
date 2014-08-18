@@ -32,7 +32,7 @@ namespace WindowsFormsApplication1
             this.ColumnList.Items.Clear();
             try
             {
-                string[] table_name = this.TablesList.SelectedItem.ToString().Split(new string[] { "." }, StringSplitOptions.None);
+                string[] table_name = this.TablesList1.SelectedItem.ToString().Split(new string[] { "." }, StringSplitOptions.None);
                 Query.CommandText = "SELECT column_name , data_type FROM information_schema.columns WHERE table_name = '" + table_name[1] + "'";
                 Connect.Open();
                 SqlDataReader Reader = Query.ExecuteReader();
@@ -41,10 +41,7 @@ namespace WindowsFormsApplication1
                     this.ColumnList.Items.Add(Reader.GetValue(0).ToString());
                 }
                 this.ColumnList.Enabled = true;
-                this.ScriptTextBox.Enabled = true;
-                this.SelecAllButton.Enabled = true;
-                this.GenerateButton.Enabled = false;
-                SelectAllButtonTextChange();
+
             }
             catch (Exception error)
             {
@@ -67,26 +64,18 @@ namespace WindowsFormsApplication1
         private void Reset()
         {
             this.ColumnList.Enabled = false;
-            this.TablesList.Enabled = false;
-            this.ScriptTextBox.Enabled = false;
-            this.GenerateButton.Enabled = false;
-            this.ScriptTextBox.Clear();            
-            this.ColumnList.Items.Clear();
-            this.TablesList.Items.Clear();
+            this.TablesList1.Enabled = false;
+            this.TablesList1.Items.Clear();
             TableElementList.Clear();
-            this.CopyButton.Enabled = false;
-            this.SaveButton.Enabled = false;
-            this.ClearButton.Enabled = false;
-            this.SelecAllButton.Enabled = false;
+            this.ColumnList2.Enabled = false;
+            this.TablesList2.Enabled = false;
+            this.TablesList2.Items.Clear();
             this.SearchTextBox.Enabled = false;
             this.SearchTextBox.Clear();
+            this.SearchTextBox2.Enabled = false;
+            this.SearchTextBox2.Clear();
         }
 
-        private void ColumnList_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            SelectAllButtonTextChange();
-            this.GenerateButton.Enabled = true;
-        }
 
         private void GenerateButton_Click(object sender, EventArgs e)
         {
@@ -94,8 +83,8 @@ namespace WindowsFormsApplication1
             string addon = null;
             int b = 0;
             string queryString = "SELECT ";
-            string countQuery = "SELECT COUNT(*) FROM " + this.TablesList.SelectedItem.ToString();
-            string[] table_name = this.TablesList.SelectedItem.ToString().Split(new string[] { "." }, StringSplitOptions.None);
+            string countQuery = "SELECT COUNT(*) FROM " + this.TablesList1.SelectedItem.ToString();
+            string[] table_name = this.TablesList1.SelectedItem.ToString().Split(new string[] { "." }, StringSplitOptions.None);
             string identity = IdentityCheck(table_name[1]);
             Query.CommandText = countQuery;
             Connect.Open();
@@ -105,9 +94,9 @@ namespace WindowsFormsApplication1
             string scriptString = null;
             if (identity != null && List.Contains(identity))
             {
-                scriptString += "SET IDENTITY_INSERT " + this.TablesList.SelectedItem.ToString() + " ON\n\n";
+                scriptString += "SET IDENTITY_INSERT " + this.TablesList1.SelectedItem.ToString() + " ON\n\n";
             }
-            scriptString += "INSERT INTO " + this.TablesList.SelectedItem.ToString() + " ";
+            scriptString += "INSERT INTO " + this.TablesList1.SelectedItem.ToString() + " ";
 
             scriptString += "(";
             for (int i = 0; i < List.Count(); i++)
@@ -123,7 +112,7 @@ namespace WindowsFormsApplication1
 
 
             }
-            queryString += ("FROM " + this.TablesList.SelectedItem.ToString());
+            queryString += ("FROM " + this.TablesList1.SelectedItem.ToString());
             scriptString += ") VALUES";
 
 
@@ -138,7 +127,6 @@ namespace WindowsFormsApplication1
                 }
                 else if (dialogresult == DialogResult.OK)
                 {
-                    this.ScriptTextBox.Clear();
                     SaveFileList(queryString, scriptString, List, identity);
                 }
                 popup.Dispose();
@@ -173,23 +161,12 @@ namespace WindowsFormsApplication1
                         scriptString += ");";
                         if (identity != null && List.Contains(identity))
                         {
-                            scriptString += "\n\nSET IDENTITY_INSERT " + this.TablesList.SelectedItem.ToString() + " OFF";
+                            scriptString += "\n\nSET IDENTITY_INSERT " + this.TablesList1.SelectedItem.ToString() + " OFF";
                         }
-                        this.ScriptTextBox.Text = scriptString;
                         this.CountLabel.Text = "Liczba wierszy: " + count.ToString();
-                        this.CopyButton.Enabled = true;
-                        this.SaveButton.Enabled = true;
                     }
-                    else
-                    {
-                        this.ScriptTextBox.Text = "Brak Rekordów do wyświetlenia!";
-                        this.CopyButton.Enabled = false;
-                        this.SaveButton.Enabled = false;
-                    }
+
                     Connect.Close();
-                    this.CopyButton.Enabled = true;
-                    this.SaveButton.Enabled = true;
-                    this.ClearButton.Enabled = true;
                 }
                 catch (Exception error)
                 {
@@ -202,23 +179,7 @@ namespace WindowsFormsApplication1
             }
         }
 
-        private void CopyButton_Click(object sender, EventArgs e)
-        {
-            System.Windows.Forms.Clipboard.SetText(this.ScriptTextBox.Text.ToString());
-        }
 
-        private void SaveButton_Click(object sender, EventArgs e)
-        {
-            SaveFile(this.ScriptTextBox.Text.ToString());
-        }
-
-        private void ClearButton_Click(object sender, EventArgs e)
-        {
-            this.CopyButton.Enabled = false;
-            this.SaveButton.Enabled = false;
-            this.ScriptTextBox.Clear();
-            this.CountLabel.Text = "";
-        }
 
         private void SaveFile(string text)
         {
@@ -238,20 +199,21 @@ namespace WindowsFormsApplication1
             }
         }
 
-        private void SelecAllButton_Click(object sender, EventArgs e)
-        {
-            Boolean check;
-            if (this.ColumnList.CheckedItems.Count == 0)
-                check = true;
-            else
-                check = false;
-            for (int i = 0; i < this.ColumnList.Items.Count; i++)
-            {
-                this.ColumnList.SetItemChecked(i, check);
-                this.GenerateButton.Enabled = check;
-            }
-            SelectAllButtonTextChange();
-        }
+        /*  private void SelecAllButton_Click(object sender, EventArgs e)
+          {
+              Boolean check;
+              if (this.ColumnList.CheckedItems.Count == 0)
+                  check = true;
+              else
+                  check = false;
+              for (int i = 0; i < this.ColumnList.Items.Count; i++)
+              {
+                  this.ColumnList.SetItemChecked(i, check);
+                  this.GenerateButton.Enabled = check;
+              }
+              SelectAllButtonTextChange();
+          }
+         */
 
         private string IdentityCheck(string tableName)
         {
@@ -310,7 +272,7 @@ namespace WindowsFormsApplication1
                         }
                         sw.Write(");");
                         if (identity != null)
-                            sw.WriteLine("\n\nSET IDENTITY_INSERT " + this.TablesList.SelectedItem.ToString() + " OFF");
+                            sw.WriteLine("\n\nSET IDENTITY_INSERT " + this.TablesList1.SelectedItem.ToString() + " OFF");
 
                     }
                 }
@@ -325,14 +287,6 @@ namespace WindowsFormsApplication1
             }
         }
 
-        private void SelectAllButtonTextChange()
-        {
-            if (this.ColumnList.CheckedItems.Count == 0)
-                this.SelecAllButton.Text = "Zaznacz Wszystkie";
-            else
-                this.SelecAllButton.Text = "Usuń Zaznaczenie";
-
-        }
 
         private string ReadReader(SqlDataReader Reader, string addon, int i)
         {
@@ -404,14 +358,14 @@ namespace WindowsFormsApplication1
 
         private void SearchTextBox_TextChanged(object sender, EventArgs e)
         {
-            this.TablesList.BeginUpdate();
-            this.TablesList.Items.Clear();
+            this.TablesList1.BeginUpdate();
+            this.TablesList1.Items.Clear();
             foreach (var item in TableElementList)
             {
                 if (item.ToString().ToLower().Contains(this.SearchTextBox.Text.ToLower()))
-                    TablesList.Items.Add(item.ToString());
+                    TablesList1.Items.Add(item.ToString());
             }
-            this.TablesList.EndUpdate();
+            this.TablesList1.EndUpdate();
         }
 
         private string ByteToStr(byte[] tab)
@@ -424,7 +378,7 @@ namespace WindowsFormsApplication1
 
         private void OpenFile_Click(object sender, EventArgs e)
         {
-            
+
         }
 
         private void Connection_StringTextBox_KeyDown(object sender, KeyEventArgs e)
@@ -438,14 +392,14 @@ namespace WindowsFormsApplication1
         {
             Reset();
             string ConnectionString;
-            if (this.Connection_StringTextBox.Text.Trim() == "" || this.Connection_StringTextBox.ForeColor==Color.Red)
+            if (this.Connection_StringTextBox.Text.Trim() == "" || this.Connection_StringTextBox.ForeColor == Color.Red)
             {
                 this.Connection_StringTextBox.Text = "Nie podano Connection Stringa!";
                 this.Connection_StringTextBox.ForeColor = Color.Red;
             }
             else
             {
-                ConnectionString = this.Connection_StringTextBox.Text.Trim();                
+                ConnectionString = this.Connection_StringTextBox.Text.Trim();
                 try
                 {
 
@@ -459,11 +413,15 @@ namespace WindowsFormsApplication1
 
                     while (Reader.Read())
                     {
-                        this.TablesList.Items.Add((Reader.GetValue(0).ToString() + "." + Reader.GetValue(1).ToString()));
+                        this.TablesList1.Items.Add((Reader.GetValue(0).ToString() + "." + Reader.GetValue(1).ToString()));
                         TableElementList.Add((Reader.GetValue(0).ToString() + "." + Reader.GetValue(1).ToString()));
+                        this.TablesList2.Items.Add((Reader.GetValue(0).ToString() + "." + Reader.GetValue(1).ToString()));
+                        // TableElementList.Add((Reader.GetValue(0).ToString() + "." + Reader.GetValue(1).ToString())); Zakomentowane, ponieważ dane w TableElementList były duplikowane.
                     }
-                    this.TablesList.Enabled = true;
+                    this.TablesList1.Enabled = true;
                     this.SearchTextBox.Enabled = true;
+                    this.TablesList2.Enabled = true;
+                    this.SearchTextBox2.Enabled = true;
                 }
                 catch (Exception error)
                 {
@@ -471,12 +429,12 @@ namespace WindowsFormsApplication1
                 }
                 finally
                 {
-                    Connect.Close();                    
+                    Connect.Close();
                 }
             }
         }
 
-        private void Connection_StringTextBox_Enter(object sender , EventArgs e)
+        private void Connection_StringTextBox_Enter(object sender, EventArgs e)
         {
             if (this.Connection_StringTextBox.ForeColor == Color.Red)
             {
@@ -490,7 +448,12 @@ namespace WindowsFormsApplication1
             this.SearchTextBox.Clear();
         }
 
-        private void otwórzPlikToolStripMenuItem_Click(object sender , EventArgs e)
+        private void SearchTextBox2_Enter(object sender, EventArgs e)
+        {
+            this.SearchTextBox2.Clear();
+        }
+
+        private void otwórzPlikToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Reset();
             try
@@ -506,11 +469,7 @@ namespace WindowsFormsApplication1
                     buff = File.ReadAllBytes(openFileDialog.FileName);
                     size = buff.Length;
                     this.CountLabel.Text = "Ilość bitów: " + size;
-                    this.ScriptTextBox.Text = "0x" + ByteToStr(buff);
-                    this.ScriptTextBox.Enabled = true;
-                    this.SaveButton.Enabled = true;
-                    this.CopyButton.Enabled = true;
-                    this.ClearButton.Enabled = true;
+                 
                     buff = null;
                 }
             }
@@ -520,21 +479,61 @@ namespace WindowsFormsApplication1
             }
         }
 
-        private void generujConnectionStringaToolStripMenuItem_Click(object sender , EventArgs e)
+        private void generujConnectionStringaToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Reset();
             CSGenerator Generator = new CSGenerator(this.Connection_StringTextBox);
-            Generator.SetDesktopLocation((this.Location.X + ((this.Size.Width - 400) / 2)) , (this.Location.Y + (this.Size.Height - 300) / 2));
+            Generator.SetDesktopLocation((this.Location.X + ((this.Size.Width - 400) / 2)), (this.Location.Y + (this.Size.Height - 300) / 2));
             DialogResult dialogresult = Generator.ShowDialog();
         }
 
         private void ShowErrorPopup(string message)
         {
             ErrorPopup Popup = new ErrorPopup(message);
-            Popup.SetDesktopLocation((this.Location.X + ((this.Size.Width - 400) / 2)) , (this.Location.Y + (this.Size.Height - 230) / 2));
+            Popup.SetDesktopLocation((this.Location.X + ((this.Size.Width - 400) / 2)), (this.Location.Y + (this.Size.Height - 230) / 2));
             DialogResult dialogresult = Popup.ShowDialog();
             if (dialogresult == DialogResult.OK)
                 Popup.Dispose();
         }
+
+        private void TablesList2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            this.ColumnList2.Items.Clear();
+            try
+            {
+                string[] table_name = this.TablesList2.SelectedItem.ToString().Split(new string[] { "." }, StringSplitOptions.None);
+                Query.CommandText = "SELECT column_name , data_type FROM information_schema.columns WHERE table_name = '" + table_name[1] + "'";
+                Connect.Open();
+                SqlDataReader Reader = Query.ExecuteReader();
+                while (Reader.Read())
+                {
+                    this.ColumnList2.Items.Add(Reader.GetValue(0).ToString());
+                }
+                this.ColumnList2.Enabled = true;
+
+            }
+            catch (Exception error)
+            {
+                ShowErrorPopup(error.Message);
+            }
+            finally
+            {
+                Connect.Close();
+            }
+        }
+
+        private void SearchTextBox2_TextChanged(object sender, EventArgs e)
+        {
+            this.TablesList2.BeginUpdate();
+            this.TablesList2.Items.Clear();
+            foreach (var item in TableElementList)
+            {
+                if (item.ToString().ToLower().Contains(this.SearchTextBox2.Text.ToLower()))
+                    TablesList2.Items.Add(item.ToString());
+            }
+            this.TablesList2.EndUpdate();
+        }
+
+
     }
 }
