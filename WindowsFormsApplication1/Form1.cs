@@ -17,6 +17,7 @@ namespace WindowsFormsApplication1
         SqlConnection Connect = new SqlConnection();
         SqlCommand Query = new SqlCommand();
         List<string> TableElementList = new List<string>();
+
         public Form1()
         {
             InitializeComponent();
@@ -29,7 +30,7 @@ namespace WindowsFormsApplication1
 
         private void TablesList_SelectedIndexChanged(object sender, EventArgs e) // Wybieranie tabeli
         {
-            this.ColumnList.Items.Clear();
+            this.ColumnListBox.Items.Clear();
             try
             {
                 string[] table_name = this.TablesList1.SelectedItem.ToString().Split(new string[] { "." }, StringSplitOptions.None);
@@ -38,9 +39,9 @@ namespace WindowsFormsApplication1
                 SqlDataReader Reader = Query.ExecuteReader();
                 while (Reader.Read())
                 {
-                    this.ColumnList.Items.Add(Reader.GetValue(0).ToString());
+                    this.ColumnListBox.Items.Add(Reader.GetValue(0).ToString());
                 }
-                this.ColumnList.Enabled = true;
+                this.ColumnListBox.Enabled = true;
 
             }
             catch (Exception error)
@@ -63,11 +64,11 @@ namespace WindowsFormsApplication1
 
         private void Reset()
         {
-            this.ColumnList.Enabled = false;
+            this.ColumnListBox.Enabled = false;
             this.TablesList1.Enabled = false;
             this.TablesList1.Items.Clear();
             TableElementList.Clear();
-            this.ColumnList2.Enabled = false;
+            this.ColumnListBox2.Enabled = false;
             this.TablesList2.Enabled = false;
             this.TablesList2.Items.Clear();
             this.SearchTextBox.Enabled = false;
@@ -79,7 +80,7 @@ namespace WindowsFormsApplication1
 
         private void GenerateButton_Click(object sender, EventArgs e)
         {
-            List<string> List = ColumnList.CheckedItems.OfType<string>().ToList();
+            List<string> List = ColumnListBox.Items.OfType<string>().ToList();
             string addon = null;
             int b = 0;
             string queryString = "SELECT ";
@@ -498,7 +499,7 @@ namespace WindowsFormsApplication1
 
         private void TablesList2_SelectedIndexChanged(object sender, EventArgs e)
         {
-            this.ColumnList2.Items.Clear();
+            this.ColumnListBox2.Items.Clear();
             try
             {
                 string[] table_name = this.TablesList2.SelectedItem.ToString().Split(new string[] { "." }, StringSplitOptions.None);
@@ -507,9 +508,9 @@ namespace WindowsFormsApplication1
                 SqlDataReader Reader = Query.ExecuteReader();
                 while (Reader.Read())
                 {
-                    this.ColumnList2.Items.Add(Reader.GetValue(0).ToString());
+                    this.ColumnListBox2.Items.Add(Reader.GetValue(0).ToString());
                 }
-                this.ColumnList2.Enabled = true;
+                this.ColumnListBox2.Enabled = true;
 
             }
             catch (Exception error)
@@ -534,6 +535,11 @@ namespace WindowsFormsApplication1
             this.TablesList2.EndUpdate();
         }
 
+        private void GeneratePrimaryButton_Click(object sender, EventArgs e)
+        {
+
+        }
 
     }
+   
 }
