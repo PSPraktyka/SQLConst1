@@ -537,7 +537,22 @@ namespace WindowsFormsApplication1
 
         private void GeneratePrimaryButton_Click(object sender, EventArgs e)
         {
+            string table1 = TablesList1.GetItemText(TablesList1.SelectedItem);
+            string table2 = TablesList2.GetItemText(TablesList2.SelectedItem);
+            string column1 = ColumnListBox.GetItemText(ColumnListBox.SelectedItem);
+            string column2 = ColumnListBox2.GetItemText(ColumnListBox2.SelectedItem);
+            System.IO.File.AppendAllText(@"C:\Users\kjurusik\Desktop\klucze.sql",  "\n \r" + "if not exists(select 1 from sysobjects where name='" + table2 +
+            ")' \n alter table" + table1 + " add constraint " + table2 + " primary key (" + column1 + ") references " + column2 );
+        }
 
+        private void GenerateForeignButton_Click(object sender, EventArgs e)
+        {
+            string table1 = TablesList1.GetItemText(TablesList1.SelectedItem);
+            string table2 = TablesList2.GetItemText(TablesList2.SelectedItem);
+            string column1 = ColumnListBox.GetItemText(ColumnListBox.SelectedItem);
+            string column2 = ColumnListBox2.GetItemText(ColumnListBox2.SelectedItem);
+            System.IO.File.AppendAllText(@"C:\Users\kjurusik\Desktop\klucze.sql", "\n \r" + "if not exists(select 1 from sysobjects where name='" + table2 +
+            ")' \n alter table" + table1 + " add constraint " + table2 + " foreign key (" + column1 + ") references " + column2);
         }
 
     }
