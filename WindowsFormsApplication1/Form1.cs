@@ -17,6 +17,7 @@ namespace WindowsFormsApplication1
         SqlConnection Connect = new SqlConnection();
         SqlCommand Query = new SqlCommand();
         List<string> TableElementList = new List<string>();
+
         public Form1()
         {
             InitializeComponent();
@@ -29,22 +30,19 @@ namespace WindowsFormsApplication1
 
         private void TablesList_SelectedIndexChanged(object sender, EventArgs e) // Wybieranie tabeli
         {
-            this.ColumnList.Items.Clear();
+            this.ColumnListBox.Items.Clear();
             try
             {
-                string[] table_name = this.TablesList.SelectedItem.ToString().Split(new string[] { "." }, StringSplitOptions.None);
+                string[] table_name = this.TablesList1.SelectedItem.ToString().Split(new string[] { "." }, StringSplitOptions.None);
                 Query.CommandText = "SELECT column_name , data_type FROM information_schema.columns WHERE table_name = '" + table_name[1] + "'";
                 Connect.Open();
                 SqlDataReader Reader = Query.ExecuteReader();
                 while (Reader.Read())
                 {
-                    this.ColumnList.Items.Add(Reader.GetValue(0).ToString());
+                    this.ColumnListBox.Items.Add(Reader.GetValue(0).ToString());
                 }
-                this.ColumnList.Enabled = true;
-                this.ScriptTextBox.Enabled = true;
-                this.SelecAllButton.Enabled = true;
-                this.GenerateButton.Enabled = false;
-                SelectAllButtonTextChange();
+                this.ColumnListBox.Enabled = true;
+
             }
             catch (Exception error)
             {
@@ -66,36 +64,28 @@ namespace WindowsFormsApplication1
 
         private void Reset()
         {
-            this.ColumnList.Enabled = false;
-            this.TablesList.Enabled = false;
-            this.ScriptTextBox.Enabled = false;
-            this.GenerateButton.Enabled = false;
-            this.ScriptTextBox.Clear();            
-            this.ColumnList.Items.Clear();
-            this.TablesList.Items.Clear();
+            this.ColumnListBox.Enabled = false;
+            this.TablesList1.Enabled = false;
+            this.TablesList1.Items.Clear();
             TableElementList.Clear();
-            this.CopyButton.Enabled = false;
-            this.SaveButton.Enabled = false;
-            this.ClearButton.Enabled = false;
-            this.SelecAllButton.Enabled = false;
+            this.ColumnListBox2.Enabled = false;
+            this.TablesList2.Enabled = false;
+            this.TablesList2.Items.Clear();
             this.SearchTextBox.Enabled = false;
             this.SearchTextBox.Clear();
+            this.SearchTextBox2.Enabled = false;
+            this.SearchTextBox2.Clear();
         }
 
-        private void ColumnList_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            SelectAllButtonTextChange();
-            this.GenerateButton.Enabled = true;
-        }
 
         private void GenerateButton_Click(object sender, EventArgs e)
         {
-            List<string> List = ColumnList.CheckedItems.OfType<string>().ToList();
+            List<string> List = ColumnListBox.Items.OfType<string>().ToList();
             string addon = null;
             int b = 0;
             string queryString = "SELECT ";
-            string countQuery = "SELECT COUNT(*) FROM " + this.TablesList.SelectedItem.ToString();
-            string[] table_name = this.TablesList.SelectedItem.ToString().Split(new string[] { "." }, StringSplitOptions.None);
+            string countQuery = "SELECT COUNT(*) FROM " + this.TablesList1.SelectedItem.ToString();
+            string[] table_name = this.TablesList1.SelectedItem.ToString().Split(new string[] { "." }, StringSplitOptions.None);
             string identity = IdentityCheck(table_name[1]);
             Query.CommandText = countQuery;
             Connect.Open();
@@ -105,9 +95,9 @@ namespace WindowsFormsApplication1
             string scriptString = null;
             if (identity != null && List.Contains(identity))
             {
-                scriptString += "SET IDENTITY_INSERT " + this.TablesList.SelectedItem.ToString() + " ON\n\n";
+                scriptString += "SET IDENTITY_INSERT " + this.TablesList1.SelectedItem.ToString() + " ON\n\n";
             }
-            scriptString += "INSERT INTO " + this.TablesList.SelectedItem.ToString() + " ";
+            scriptString += "INSERT INTO " + this.TablesList1.SelectedItem.ToString() + " ";
 
             scriptString += "(";
             for (int i = 0; i < List.Count(); i++)
@@ -123,7 +113,7 @@ namespace WindowsFormsApplication1
 
 
             }
-            queryString += ("FROM " + this.TablesList.SelectedItem.ToString());
+            queryString += ("FROM " + this.TablesList1.SelectedItem.ToString());
             scriptString += ") VALUES";
 
 
@@ -138,7 +128,6 @@ namespace WindowsFormsApplication1
                 }
                 else if (dialogresult == DialogResult.OK)
                 {
-                    this.ScriptTextBox.Clear();
                     SaveFileList(queryString, scriptString, List, identity);
                 }
                 popup.Dispose();
@@ -173,23 +162,12 @@ namespace WindowsFormsApplication1
                         scriptString += ");";
                         if (identity != null && List.Contains(identity))
                         {
-                            scriptString += "\n\nSET IDENTITY_INSERT " + this.TablesList.SelectedItem.ToString() + " OFF";
+                            scriptString += "\n\nSET IDENTITY_INSERT " + this.TablesList1.SelectedItem.ToString() + " OFF";
                         }
-                        this.ScriptTextBox.Text = scriptString;
                         this.CountLabel.Text = "Liczba wierszy: " + count.ToString();
-                        this.CopyButton.Enabled = true;
-                        this.SaveButton.Enabled = true;
                     }
-                    else
-                    {
-                        this.ScriptTextBox.Text = "Brak Rekordów do wyświetlenia!";
-                        this.CopyButton.Enabled = false;
-                        this.SaveButton.Enabled = false;
-                    }
+
                     Connect.Close();
-                    this.CopyButton.Enabled = true;
-                    this.SaveButton.Enabled = true;
-                    this.ClearButton.Enabled = true;
                 }
                 catch (Exception error)
                 {
@@ -202,23 +180,7 @@ namespace WindowsFormsApplication1
             }
         }
 
-        private void CopyButton_Click(object sender, EventArgs e)
-        {
-            System.Windows.Forms.Clipboard.SetText(this.ScriptTextBox.Text.ToString());
-        }
 
-        private void SaveButton_Click(object sender, EventArgs e)
-        {
-            SaveFile(this.ScriptTextBox.Text.ToString());
-        }
-
-        private void ClearButton_Click(object sender, EventArgs e)
-        {
-            this.CopyButton.Enabled = false;
-            this.SaveButton.Enabled = false;
-            this.ScriptTextBox.Clear();
-            this.CountLabel.Text = "";
-        }
 
         private void SaveFile(string text)
         {
@@ -238,20 +200,21 @@ namespace WindowsFormsApplication1
             }
         }
 
-        private void SelecAllButton_Click(object sender, EventArgs e)
-        {
-            Boolean check;
-            if (this.ColumnList.CheckedItems.Count == 0)
-                check = true;
-            else
-                check = false;
-            for (int i = 0; i < this.ColumnList.Items.Count; i++)
-            {
-                this.ColumnList.SetItemChecked(i, check);
-                this.GenerateButton.Enabled = check;
-            }
-            SelectAllButtonTextChange();
-        }
+        /*  private void SelecAllButton_Click(object sender, EventArgs e)
+          {
+              Boolean check;
+              if (this.ColumnList.CheckedItems.Count == 0)
+                  check = true;
+              else
+                  check = false;
+              for (int i = 0; i < this.ColumnList.Items.Count; i++)
+              {
+                  this.ColumnList.SetItemChecked(i, check);
+                  this.GenerateButton.Enabled = check;
+              }
+              SelectAllButtonTextChange();
+          }
+         */
 
         private string IdentityCheck(string tableName)
         {
@@ -310,7 +273,7 @@ namespace WindowsFormsApplication1
                         }
                         sw.Write(");");
                         if (identity != null)
-                            sw.WriteLine("\n\nSET IDENTITY_INSERT " + this.TablesList.SelectedItem.ToString() + " OFF");
+                            sw.WriteLine("\n\nSET IDENTITY_INSERT " + this.TablesList1.SelectedItem.ToString() + " OFF");
 
                     }
                 }
@@ -325,14 +288,6 @@ namespace WindowsFormsApplication1
             }
         }
 
-        private void SelectAllButtonTextChange()
-        {
-            if (this.ColumnList.CheckedItems.Count == 0)
-                this.SelecAllButton.Text = "Zaznacz Wszystkie";
-            else
-                this.SelecAllButton.Text = "Usuń Zaznaczenie";
-
-        }
 
         private string ReadReader(SqlDataReader Reader, string addon, int i)
         {
@@ -404,14 +359,14 @@ namespace WindowsFormsApplication1
 
         private void SearchTextBox_TextChanged(object sender, EventArgs e)
         {
-            this.TablesList.BeginUpdate();
-            this.TablesList.Items.Clear();
+            this.TablesList1.BeginUpdate();
+            this.TablesList1.Items.Clear();
             foreach (var item in TableElementList)
             {
                 if (item.ToString().ToLower().Contains(this.SearchTextBox.Text.ToLower()))
-                    TablesList.Items.Add(item.ToString());
+                    TablesList1.Items.Add(item.ToString());
             }
-            this.TablesList.EndUpdate();
+            this.TablesList1.EndUpdate();
         }
 
         private string ByteToStr(byte[] tab)
@@ -424,7 +379,7 @@ namespace WindowsFormsApplication1
 
         private void OpenFile_Click(object sender, EventArgs e)
         {
-            
+
         }
 
         private void Connection_StringTextBox_KeyDown(object sender, KeyEventArgs e)
@@ -437,109 +392,6 @@ namespace WindowsFormsApplication1
         private void Connection()
         {
             Reset();
-            string ConnectionString;
-            if (this.Connection_StringTextBox.Text.Trim() == "" || this.Connection_StringTextBox.ForeColor==Color.Red)
-            {
-                this.Connection_StringTextBox.Text = "Nie podano Connection Stringa!";
-                this.Connection_StringTextBox.ForeColor = Color.Red;
-            }
-            else
-            {
-                ConnectionString = this.Connection_StringTextBox.Text.Trim();                
-                try
-                {
-
-                    Connect.ConnectionString = ConnectionString;
-                    Query.Connection = Connect;
-                    Query.CommandType = CommandType.Text;
-                    Query.CommandText = "SELECT TABLE_SCHEMA, TABLE_NAME FROM INFORMATION_SCHEMA.TABLES ORDER BY TABLE_SCHEMA"; // Pobieranie listy tabel
-                    //Query.CommandText = "SELECT TABLE_NAME, CONSTRAINT_NAME FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE CONSTRAINT_TYPE='FOREIGN KEY'";
-                    Connect.Open();
-
-                    SqlDataReader Reader = Query.ExecuteReader();
-
-                    while (Reader.Read())
-                    {
-                        this.TablesList.Items.Add((Reader.GetValue(0).ToString() + "." + Reader.GetValue(1).ToString()));
-                        TableElementList.Add((Reader.GetValue(0).ToString() + "." + Reader.GetValue(1).ToString()));
-                    }
-                    this.TablesList.Enabled = true;
-                    this.SearchTextBox.Enabled = true;
-                }
-                catch (Exception error)
-                {
-                    ShowErrorPopup(error.Message);
-                }
-                finally
-                {
-                    Connect.Close();                    
-                }
-            }
-        }
-
-        private void Connection_StringTextBox_Enter(object sender , EventArgs e)
-        {
-            if (this.Connection_StringTextBox.ForeColor == Color.Red)
-            {
-                this.Connection_StringTextBox.ForeColor = Color.Black;
-                this.Connection_StringTextBox.Clear();
-            }
-        }
-
-        private void SearchTextBox_Enter(object sender, EventArgs e)
-        {
-            this.SearchTextBox.Clear();
-        }
-
-        private void otwórzPlikToolStripMenuItem_Click(object sender , EventArgs e)
-        {
-            Reset();
-            try
-            {
-                long size;
-                byte[] buff;
-                OpenFileDialog openFileDialog = new OpenFileDialog();
-                openFileDialog.Filter = "Text file (*.txt)|*.txt|All files (*.*)|*.*|Structured Query Language file (*.sql)|*.sql";
-                openFileDialog.FilterIndex = 2;
-                openFileDialog.RestoreDirectory = true;
-                if (openFileDialog.ShowDialog() == DialogResult.OK)
-                {
-                    buff = File.ReadAllBytes(openFileDialog.FileName);
-                    size = buff.Length;
-                    this.CountLabel.Text = "Ilość bitów: " + size;
-                    this.ScriptTextBox.Text = "0x" + ByteToStr(buff);
-                    this.ScriptTextBox.Enabled = true;
-                    this.SaveButton.Enabled = true;
-                    this.CopyButton.Enabled = true;
-                    this.ClearButton.Enabled = true;
-                    buff = null;
-                }
-            }
-            catch (Exception error)
-            {
-                ShowErrorPopup(error.Message);
-            }
-        }
-
-        private void generujConnectionStringaToolStripMenuItem_Click(object sender , EventArgs e)
-        {
-            Reset();
-            CSGenerator Generator = new CSGenerator(this.Connection_StringTextBox);
-            Generator.SetDesktopLocation((this.Location.X + ((this.Size.Width - 400) / 2)) , (this.Location.Y + (this.Size.Height - 300) / 2));
-            DialogResult dialogresult = Generator.ShowDialog();
-        }
-
-        private void ShowErrorPopup(string message)
-        {
-            ErrorPopup Popup = new ErrorPopup(message);
-            Popup.SetDesktopLocation((this.Location.X + ((this.Size.Width - 400) / 2)) , (this.Location.Y + (this.Size.Height - 230) / 2));
-            DialogResult dialogresult = Popup.ShowDialog();
-            if (dialogresult == DialogResult.OK)
-                Popup.Dispose();
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
             string ConnectionString;
             if (this.Connection_StringTextBox.Text.Trim() == "" || this.Connection_StringTextBox.ForeColor == Color.Red)
             {
@@ -555,24 +407,22 @@ namespace WindowsFormsApplication1
                     Connect.ConnectionString = ConnectionString;
                     Query.Connection = Connect;
                     Query.CommandType = CommandType.Text;
-                    //Query.CommandText = "SELECT TABLE_SCHEMA, TABLE_NAME FROM INFORMATION_SCHEMA.TABLES ORDER BY TABLE_SCHEMA"; // Pobieranie listy tabel
-                    //Query.CommandText = "SELECT TABLE_NAME, CONSTRAINT_NAME FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE CONSTRAINT_TYPE='FOREIGN KEY'";
-
+                    Query.CommandText = "SELECT TABLE_SCHEMA, TABLE_NAME FROM INFORMATION_SCHEMA.TABLES ORDER BY TABLE_SCHEMA"; // Pobieranie listy tabel
                     Connect.Open();
-                    DataTable table = Connect.GetSchema("ForeignKeys");
-                   // SqlDataReader Reader = Query.ExecuteReader();
-                    foreach(System.Data.DataRow row in table.Rows)
-                    {
-                        listBox1.Items.Add(row["table_name"] + "." + row["constraint_name"]);
-                    }
 
-                   /* while (Reader.Read())
+                    SqlDataReader Reader = Query.ExecuteReader();
+
+                    while (Reader.Read())
                     {
-                        this.listBox1.Items.Add((Reader.GetValue(0).ToString() + "." + Reader.GetValue(1).ToString()));
-                        //TableElementList.Add((Reader.GetValue(0).ToString() + "." + Reader.GetValue(1).ToString()));
+                        this.TablesList1.Items.Add((Reader.GetValue(0).ToString() + "." + Reader.GetValue(1).ToString()));
+                        TableElementList.Add((Reader.GetValue(0).ToString() + "." + Reader.GetValue(1).ToString()));
+                        this.TablesList2.Items.Add((Reader.GetValue(0).ToString() + "." + Reader.GetValue(1).ToString()));
+                        // TableElementList.Add((Reader.GetValue(0).ToString() + "." + Reader.GetValue(1).ToString())); Zakomentowane, ponieważ dane w TableElementList były duplikowane.
                     }
-                   // this.TablesList.Enabled = true;
-                   // this.SearchTextBox.Enabled = true;*/
+                    this.TablesList1.Enabled = true;
+                    this.SearchTextBox.Enabled = true;
+                    this.TablesList2.Enabled = true;
+                    this.SearchTextBox2.Enabled = true;
                 }
                 catch (Exception error)
                 {
@@ -583,12 +433,201 @@ namespace WindowsFormsApplication1
                     Connect.Close();
                 }
             }
-
-
-
-
-
-            
         }
+
+        private void Connection_StringTextBox_Enter(object sender, EventArgs e)
+        {
+            if (this.Connection_StringTextBox.ForeColor == Color.Red)
+            {
+                this.Connection_StringTextBox.ForeColor = Color.Black;
+                this.Connection_StringTextBox.Clear();
+            }
+        }
+
+        private void SearchTextBox_Enter(object sender, EventArgs e)
+        {
+            this.SearchTextBox.Clear();
+        }
+
+        private void SearchTextBox2_Enter(object sender, EventArgs e)
+        {
+            this.SearchTextBox2.Clear();
+        }
+
+        private void otwórzPlikToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Reset();
+            try
+            {
+                long size;
+                byte[] buff;
+                OpenFileDialog openFileDialog = new OpenFileDialog();
+                openFileDialog.Filter = "Text file (*.txt)|*.txt|All files (*.*)|*.*|Structured Query Language file (*.sql)|*.sql";
+                openFileDialog.FilterIndex = 2;
+                openFileDialog.RestoreDirectory = true;
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    buff = File.ReadAllBytes(openFileDialog.FileName);
+                    size = buff.Length;
+                    this.CountLabel.Text = "Ilość bitów: " + size;
+                 
+                    buff = null;
+                }
+            }
+            catch (Exception error)
+            {
+                ShowErrorPopup(error.Message);
+            }
+        }
+
+        private void generujConnectionStringaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Reset();
+            CSGenerator Generator = new CSGenerator(this.Connection_StringTextBox);
+            Generator.SetDesktopLocation((this.Location.X + ((this.Size.Width - 400) / 2)), (this.Location.Y + (this.Size.Height - 300) / 2));
+            DialogResult dialogresult = Generator.ShowDialog();
+        }
+
+        private void ShowErrorPopup(string message)
+        {
+            ErrorPopup Popup = new ErrorPopup(message);
+            Popup.SetDesktopLocation((this.Location.X + ((this.Size.Width - 400) / 2)), (this.Location.Y + (this.Size.Height - 230) / 2));
+            DialogResult dialogresult = Popup.ShowDialog();
+            if (dialogresult == DialogResult.OK)
+                Popup.Dispose();
+        }
+
+        private void TablesList2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            this.ColumnListBox2.Items.Clear();
+            try
+            {
+                string[] table_name = this.TablesList2.SelectedItem.ToString().Split(new string[] { "." }, StringSplitOptions.None);
+                Query.CommandText = "SELECT column_name , data_type FROM information_schema.columns WHERE table_name = '" + table_name[1] + "'";
+                Connect.Open();
+                SqlDataReader Reader = Query.ExecuteReader();
+                while (Reader.Read())
+                {
+                    this.ColumnListBox2.Items.Add(Reader.GetValue(0).ToString());
+                }
+                this.ColumnListBox2.Enabled = true;
+
+            }
+            catch (Exception error)
+            {
+                ShowErrorPopup(error.Message);
+            }
+            finally
+            {
+                Connect.Close();
+            }
+        }
+
+        private void SearchTextBox2_TextChanged(object sender, EventArgs e)
+        {
+            this.TablesList2.BeginUpdate();
+            this.TablesList2.Items.Clear();
+            foreach (var item in TableElementList)
+            {
+                if (item.ToString().ToLower().Contains(this.SearchTextBox2.Text.ToLower()))
+                    TablesList2.Items.Add(item.ToString());
+            }
+            this.TablesList2.EndUpdate();
+        }
+
+        private void GeneratePrimaryButton_Click(object sender, EventArgs e)
+        {
+            string table1 = TablesList1.GetItemText(TablesList1.SelectedItem);
+            string table2 = TablesList2.GetItemText(TablesList2.SelectedItem);
+            string column1 = ColumnListBox.GetItemText(ColumnListBox.SelectedItem);
+            string column2 = ColumnListBox2.GetItemText(ColumnListBox2.SelectedItem);
+            System.IO.File.AppendAllText(@"C:\Users\kjurusik\Desktop\klucze.sql",  "\n \r" + "if not exists(select 1 from sysobjects where name='" + table2 +
+            ")' \n alter table" + table1 + " add constraint " + table2 + " primary key (" + column1 + ") references " + column2 );
+        }
+
+        private void GenerateForeignButton_Click(object sender, EventArgs e)
+        {
+            string table1 = TablesList1.GetItemText(TablesList1.SelectedItem);
+            string table2 = TablesList2.GetItemText(TablesList2.SelectedItem);
+            string column1 = ColumnListBox.GetItemText(ColumnListBox.SelectedItem);
+            string column2 = ColumnListBox2.GetItemText(ColumnListBox2.SelectedItem);
+            System.IO.File.AppendAllText(@"C:\Users\kjurusik\Desktop\klucze.sql", "\n \r" + "if not exists(select 1 from sysobjects where name='" + table2 +
+            ")' \n alter table" + table1 + " add constraint " + table2 + " foreign key (" + column1 + ") references " + column2);
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            string ConnectionString;
+            if (this.Connection_StringTextBox.Text.Trim() == "" || this.Connection_StringTextBox.ForeColor==Color.Red)
+            {
+                this.Connection_StringTextBox.Text = "Nie podano Connection Stringa!";
+                this.Connection_StringTextBox.ForeColor = Color.Red;
+            }
+            else
+            {
+                ConnectionString = this.Connection_StringTextBox.Text.Trim();                
+                try
+                {
+
+                    Connect.ConnectionString = ConnectionString;
+                    Query.Connection = Connect;
+                    Query.CommandType = CommandType.Text;
+                    //Query.CommandText = "SELECT TABLE_SCHEMA, TABLE_NAME FROM INFORMATION_SCHEMA.TABLES ORDER BY TABLE_SCHEMA"; // Pobieranie listy tabel
+                    //Query.CommandText = "SELECT TABLE_NAME, CONSTRAINT_NAME FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE CONSTRAINT_TYPE='FOREIGN KEY'";
+                    Query.CommandText = "SELECT o1.name AS FK_table, c1.name AS FK_column, fk.name AS FK_name, o2.name AS PK_table, c2.name AS PK_column, pk.name AS PK_name, fk.delete_referential_action_desc AS Delete_Action, fk.update_referential_action_desc AS Update_Action FROM sys.objects o1 INNER JOIN sys.foreign_keys fk ON o1.object_id = fk.parent_object_id INNER JOIN sys.foreign_key_columns fkc ON fk.object_id = fkc.constraint_object_id INNER JOIN sys.columns c1 ON fkc.parent_object_id = c1.object_id AND fkc.parent_column_id = c1.column_id INNER JOIN sys.columns c2 ON fkc.referenced_object_id = c2.object_id AND fkc.referenced_column_id = c2.column_id INNER JOIN sys.objects o2 ON fk.referenced_object_id = o2.object_id INNER JOIN sys.key_constraints pk ON fk.referenced_object_id = pk.parent_object_id AND fk.key_index_id = pk.unique_index_id ORDER BY o1.name, o2.name, fkc.constraint_column_id";
+                   
+                    Connect.Open();
+
+                    SqlDataReader Reader = Query.ExecuteReader();
+
+                    while (Reader.Read())
+                    {
+                        this.listBox1.Items.Add((Reader.GetValue(2).ToString()));
+                        //TableElementList.Add((Reader.GetValue(0).ToString() + "." + Reader.GetValue(1).ToString()));
+                    }
+                    //this.listBox1.Enabled = true;
+                    //this.SearchTextBox.Enabled = true;
+                }
+                catch (Exception error)
+                {
+                    ShowErrorPopup(error.Message);
+                }
+                finally
+                {
+                    Connect.Close();                    
+                }
+            }
+        }
+
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                string table_name = this.listBox1.SelectedItem.ToString();
+                Query.CommandText = "SELECT o1.name AS FK_table, c1.name AS FK_column, fk.name AS FK_name, o2.name AS PK_table, c2.name AS PK_column, pk.name AS PK_name, fk.delete_referential_action_desc AS Delete_Action, fk.update_referential_action_desc AS Update_Action FROM sys.objects o1 INNER JOIN sys.foreign_keys fk ON o1.object_id = fk.parent_object_id INNER JOIN sys.foreign_key_columns fkc ON fk.object_id = fkc.constraint_object_id INNER JOIN sys.columns c1 ON fkc.parent_object_id = c1.object_id AND fkc.parent_column_id = c1.column_id INNER JOIN sys.columns c2 ON fkc.referenced_object_id = c2.object_id AND fkc.referenced_column_id = c2.column_id INNER JOIN sys.objects o2 ON fk.referenced_object_id = o2.object_id INNER JOIN sys.key_constraints pk ON fk.referenced_object_id = pk.parent_object_id AND fk.key_index_id = pk.unique_index_id WHERE fk.name = '" + table_name + "'" + "ORDER BY o1.name, o2.name, fkc.constraint_column_id ";
+                Connect.Open();
+                SqlDataReader Reader = Query.ExecuteReader();
+                while (Reader.Read())
+                {
+                    this.textBoxFKTable.Text = Reader.GetValue(0).ToString();
+                    this.textBoxFKColumn.Text = Reader.GetValue(1).ToString();
+                    this.textBoxPKTable.Text = Reader.GetValue(3).ToString();
+                    this.textBoxPKColumn.Text = Reader.GetValue(4).ToString();
+                }
+                this.ColumnListBox2.Enabled = true;
+
+            }
+            catch (Exception error)
+            {
+                ShowErrorPopup(error.Message);
+            }
+            finally
+            {
+                Connect.Close();
+            }
+        }
+
+
     }
+   
 }
