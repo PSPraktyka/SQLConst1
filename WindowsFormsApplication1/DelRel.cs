@@ -12,9 +12,16 @@ namespace WindowsFormsApplication1
 {
     public partial class DelRel : Form
     {
-        public DelRel()
+        public DelRel(string Sql)
         {
             InitializeComponent();
+            this.richTextBoxSQL.Text = Sql;
         }
+
+        private void bCopy_Click(object sender, EventArgs e)
+        {
+            System.Windows.Forms.Clipboard.SetText(this.richTextBoxSQL.Text.ToString());
+        }
+
     }
 }

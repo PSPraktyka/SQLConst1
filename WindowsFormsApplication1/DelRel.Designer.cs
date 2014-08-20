@@ -74,6 +74,7 @@
             this.bCopy.TabIndex = 3;
             this.bCopy.Text = "Kopiuj";
             this.bCopy.UseVisualStyleBackColor = true;
+            this.bCopy.Click += new System.EventHandler(this.bCopy_Click);
             // 
             // label2
             // 
