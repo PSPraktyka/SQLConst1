@@ -34,6 +34,8 @@
             this.bCopy = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.richTextBoxSQL = new System.Windows.Forms.RichTextBox();
+            this.bSave = new System.Windows.Forms.Button();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.SuspendLayout();
             // 
             // label1
@@ -94,11 +96,22 @@
             this.richTextBoxSQL.TabIndex = 5;
             this.richTextBoxSQL.Text = "";
             // 
+            // bSave
+            // 
+            this.bSave.Location = new System.Drawing.Point(195, 243);
+            this.bSave.Name = "bSave";
+            this.bSave.Size = new System.Drawing.Size(111, 23);
+            this.bSave.TabIndex = 6;
+            this.bSave.Text = "Zapisz do pliku";
+            this.bSave.UseVisualStyleBackColor = true;
+            this.bSave.Click += new System.EventHandler(this.bSave_Click);
+            // 
             // DelRel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(444, 278);
+            this.Controls.Add(this.bSave);
             this.Controls.Add(this.richTextBoxSQL);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.bCopy);
@@ -120,5 +133,7 @@
         private System.Windows.Forms.Button bCopy;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.RichTextBox richTextBoxSQL;
+        private System.Windows.Forms.Button bSave;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
     }
 }

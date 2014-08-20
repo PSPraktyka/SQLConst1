@@ -23,5 +23,18 @@ namespace WindowsFormsApplication1
             System.Windows.Forms.Clipboard.SetText(this.richTextBoxSQL.Text.ToString());
         }
 
+        private void bSave_Click(object sender, EventArgs e)
+        {
+            
+            saveFileDialog1.Filter = "Text file (*.txt)|*.txt|All files (*.*)|*.*|Structured Query Language file (*.sql)|*.sql";
+                saveFileDialog1.FilterIndex = 2;
+                saveFileDialog1.RestoreDirectory = true;
+                if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    System.IO.File.AppendAllText(saveFileDialog1.FileName, Environment.NewLine + this.richTextBoxSQL.Text.Trim());
+
+                }
+        }
+
     }
 }
