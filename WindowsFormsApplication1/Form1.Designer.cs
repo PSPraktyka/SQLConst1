@@ -65,6 +65,7 @@
             this.GeneratePrimaryButton = new System.Windows.Forms.Button();
             this.ColumnListBox2 = new System.Windows.Forms.ListBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.button2 = new System.Windows.Forms.Button();
             this.textBoxPKColumn = new System.Windows.Forms.TextBox();
             this.textBoxPKTable = new System.Windows.Forms.TextBox();
             this.textBoxFKColumn = new System.Windows.Forms.TextBox();
@@ -75,7 +76,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.tableLayoutPanel4.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -260,7 +260,7 @@
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.00125F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 24.99875F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 24.99875F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 121F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 123F));
             this.tableLayoutPanel2.Controls.Add(this.GenerateForeignButton, 4, 1);
             this.tableLayoutPanel2.Controls.Add(this.panel2, 0, 1);
             this.tableLayoutPanel2.Controls.Add(this.panel3, 1, 1);
@@ -284,9 +284,9 @@
             // GenerateForeignButton
             // 
             this.GenerateForeignButton.Dock = System.Windows.Forms.DockStyle.Top;
-            this.GenerateForeignButton.Location = new System.Drawing.Point(1031, 45);
+            this.GenerateForeignButton.Location = new System.Drawing.Point(1029, 45);
             this.GenerateForeignButton.Name = "GenerateForeignButton";
-            this.GenerateForeignButton.Size = new System.Drawing.Size(117, 36);
+            this.GenerateForeignButton.Size = new System.Drawing.Size(119, 36);
             this.GenerateForeignButton.TabIndex = 0;
             this.GenerateForeignButton.Text = "Foreign Key";
             this.GenerateForeignButton.UseVisualStyleBackColor = true;
@@ -370,7 +370,7 @@
             this.panel6.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel6.Location = new System.Drawing.Point(517, 3);
             this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(251, 36);
+            this.panel6.Size = new System.Drawing.Size(250, 36);
             this.panel6.TabIndex = 5;
             // 
             // SearchTextBox2
@@ -404,7 +404,7 @@
             // 
             this.ErrorLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.ErrorLabel.AutoSize = true;
-            this.ErrorLabel.Location = new System.Drawing.Point(86, 12);
+            this.ErrorLabel.Location = new System.Drawing.Point(85, 12);
             this.ErrorLabel.Name = "ErrorLabel";
             this.ErrorLabel.Size = new System.Drawing.Size(0, 13);
             this.ErrorLabel.TabIndex = 12;
@@ -433,7 +433,7 @@
             this.TablesList2.FormattingEnabled = true;
             this.TablesList2.Location = new System.Drawing.Point(517, 45);
             this.TablesList2.Name = "TablesList2";
-            this.TablesList2.Size = new System.Drawing.Size(251, 426);
+            this.TablesList2.Size = new System.Drawing.Size(250, 426);
             this.TablesList2.TabIndex = 7;
             this.TablesList2.SelectedIndexChanged += new System.EventHandler(this.TablesList2_SelectedIndexChanged);
             // 
@@ -441,9 +441,9 @@
             // 
             this.panel7.Controls.Add(this.ColumnListLabel2);
             this.panel7.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel7.Location = new System.Drawing.Point(774, 3);
+            this.panel7.Location = new System.Drawing.Point(773, 3);
             this.panel7.Name = "panel7";
-            this.panel7.Size = new System.Drawing.Size(251, 36);
+            this.panel7.Size = new System.Drawing.Size(250, 36);
             this.panel7.TabIndex = 22;
             // 
             // ColumnListLabel2
@@ -459,9 +459,9 @@
             // 
             this.panel8.Controls.Add(this.GeneratePrimaryButton);
             this.panel8.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel8.Location = new System.Drawing.Point(1031, 3);
+            this.panel8.Location = new System.Drawing.Point(1029, 3);
             this.panel8.Name = "panel8";
-            this.panel8.Size = new System.Drawing.Size(117, 36);
+            this.panel8.Size = new System.Drawing.Size(119, 36);
             this.panel8.TabIndex = 24;
             // 
             // GeneratePrimaryButton
@@ -469,7 +469,7 @@
             this.GeneratePrimaryButton.Dock = System.Windows.Forms.DockStyle.Top;
             this.GeneratePrimaryButton.Location = new System.Drawing.Point(0, 0);
             this.GeneratePrimaryButton.Name = "GeneratePrimaryButton";
-            this.GeneratePrimaryButton.Size = new System.Drawing.Size(117, 36);
+            this.GeneratePrimaryButton.Size = new System.Drawing.Size(119, 36);
             this.GeneratePrimaryButton.TabIndex = 27;
             this.GeneratePrimaryButton.Text = "Primary key";
             this.GeneratePrimaryButton.UseVisualStyleBackColor = true;
@@ -479,9 +479,9 @@
             // 
             this.ColumnListBox2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ColumnListBox2.FormattingEnabled = true;
-            this.ColumnListBox2.Location = new System.Drawing.Point(774, 45);
+            this.ColumnListBox2.Location = new System.Drawing.Point(773, 45);
             this.ColumnListBox2.Name = "ColumnListBox2";
-            this.ColumnListBox2.Size = new System.Drawing.Size(251, 426);
+            this.ColumnListBox2.Size = new System.Drawing.Size(250, 426);
             this.ColumnListBox2.TabIndex = 25;
             // 
             // tabPage2
@@ -504,6 +504,16 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "tabPage2";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(345, 262);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(109, 32);
+            this.button2.TabIndex = 10;
+            this.button2.Text = "Usuń relację";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // textBoxPKColumn
             // 
@@ -587,15 +597,6 @@
             this.button1.Text = "Połącz";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(345, 262);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(109, 32);
-            this.button2.TabIndex = 10;
-            this.button2.Text = "Usuń relację";
-            this.button2.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
