@@ -27,11 +27,11 @@ namespace WindowsFormsApplication1
         {
             
             saveFileDialog1.Filter = "Text file (*.txt)|*.txt|All files (*.*)|*.*|Structured Query Language file (*.sql)|*.sql";
-                saveFileDialog1.FilterIndex = 2;
-                saveFileDialog1.RestoreDirectory = true;
-                if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            saveFileDialog1.FilterIndex = 2;
+            saveFileDialog1.RestoreDirectory = true;
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
                 {
-                    System.IO.File.AppendAllText(saveFileDialog1.FileName, Environment.NewLine + this.richTextBoxSQL.Text.Trim());
+                    System.IO.File.AppendAllText(saveFileDialog1.FileName, Environment.NewLine + Environment.NewLine + this.richTextBoxSQL.Text.Trim());
 
                 }
         }

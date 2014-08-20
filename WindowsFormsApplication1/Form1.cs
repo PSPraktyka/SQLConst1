@@ -541,8 +541,18 @@ namespace WindowsFormsApplication1
             string table2 = TablesList2.GetItemText(TablesList2.SelectedItem);
             string column1 = ColumnListBox.GetItemText(ColumnListBox.SelectedItem);
             string column2 = ColumnListBox2.GetItemText(ColumnListBox2.SelectedItem);
-            System.IO.File.AppendAllText(@"C:\Users\kjurusik\Desktop\klucze.sql",  "\n \r" + "if not exists(select 1 from sysobjects where name='" + table2 +
-            ")' \n alter table" + table1 + " add constraint " + table2 + " primary key (" + column1 + ") references " + column2 );
+
+            saveFileDialog1.Filter = "Text file (*.txt)|*.txt|All files (*.*)|*.*|Structured Query Language file (*.sql)|*.sql";
+            saveFileDialog1.FilterIndex = 2;
+            saveFileDialog1.RestoreDirectory = true;
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+
+
+                System.IO.File.AppendAllText(saveFileDialog1.FileName, Environment.NewLine + Environment.NewLine + "if not exists(select 1 from sysobjects where name='" + table2 +
+                ")' \n alter table " + table1 + " add constraint " + table2 + " primary key (" + column1 + ") references " + column2);
+
+            }
         }
 
         private void GenerateForeignButton_Click(object sender, EventArgs e)
@@ -551,8 +561,19 @@ namespace WindowsFormsApplication1
             string table2 = TablesList2.GetItemText(TablesList2.SelectedItem);
             string column1 = ColumnListBox.GetItemText(ColumnListBox.SelectedItem);
             string column2 = ColumnListBox2.GetItemText(ColumnListBox2.SelectedItem);
-            System.IO.File.AppendAllText(@"C:\Users\kjurusik\Desktop\klucze.sql", "\n \r" + "if not exists(select 1 from sysobjects where name='" + table2 +
-            ")' \n alter table" + table1 + " add constraint " + table2 + " foreign key (" + column1 + ") references " + column2);
+
+            saveFileDialog1.Filter = "Text file (*.txt)|*.txt|All files (*.*)|*.*|Structured Query Language file (*.sql)|*.sql";
+            saveFileDialog1.FilterIndex = 2;
+            saveFileDialog1.RestoreDirectory = true;
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                System.IO.File.AppendAllText(saveFileDialog1.FileName, Environment.NewLine + Environment.NewLine + "if not exists(select 1 from sysobjects where name='" + table2 +
+            ")' \n alter table " + table1 + " add constraint " + table2 + " foreign key (" + column1 + ") references " + column2);
+
+            }
+
+
+            
         }
 
         private void button1_Click(object sender, EventArgs e)

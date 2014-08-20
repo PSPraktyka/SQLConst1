@@ -76,6 +76,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.button1 = new System.Windows.Forms.Button();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.panel1.SuspendLayout();
             this.tableLayoutPanel4.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -502,7 +503,7 @@
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage2.Size = new System.Drawing.Size(1163, 545);
             this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "tabPage2";
+            this.tabPage2.Text = "Lista relacji";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // button2
@@ -519,6 +520,7 @@
             // 
             this.textBoxPKColumn.Location = new System.Drawing.Point(345, 226);
             this.textBoxPKColumn.Name = "textBoxPKColumn";
+            this.textBoxPKColumn.ReadOnly = true;
             this.textBoxPKColumn.Size = new System.Drawing.Size(234, 20);
             this.textBoxPKColumn.TabIndex = 9;
             // 
@@ -526,6 +528,7 @@
             // 
             this.textBoxPKTable.Location = new System.Drawing.Point(345, 169);
             this.textBoxPKTable.Name = "textBoxPKTable";
+            this.textBoxPKTable.ReadOnly = true;
             this.textBoxPKTable.Size = new System.Drawing.Size(234, 20);
             this.textBoxPKTable.TabIndex = 8;
             // 
@@ -533,6 +536,7 @@
             // 
             this.textBoxFKColumn.Location = new System.Drawing.Point(345, 115);
             this.textBoxFKColumn.Name = "textBoxFKColumn";
+            this.textBoxFKColumn.ReadOnly = true;
             this.textBoxFKColumn.Size = new System.Drawing.Size(234, 20);
             this.textBoxFKColumn.TabIndex = 7;
             // 
@@ -540,6 +544,7 @@
             // 
             this.textBoxFKTable.Location = new System.Drawing.Point(345, 64);
             this.textBoxFKTable.Name = "textBoxFKTable";
+            this.textBoxFKTable.ReadOnly = true;
             this.textBoxFKTable.Size = new System.Drawing.Size(234, 20);
             this.textBoxFKTable.TabIndex = 6;
             // 
@@ -685,6 +690,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
 
     }
 }
