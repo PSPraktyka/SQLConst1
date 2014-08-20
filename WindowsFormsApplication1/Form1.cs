@@ -453,6 +453,7 @@ namespace WindowsFormsApplication1
                     Query.Connection = Connect;
                     Query.CommandType = CommandType.Text;
                     Query.CommandText = "SELECT TABLE_SCHEMA, TABLE_NAME FROM INFORMATION_SCHEMA.TABLES ORDER BY TABLE_SCHEMA"; // Pobieranie listy tabel
+                    //Query.CommandText = "SELECT TABLE_NAME, CONSTRAINT_NAME FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE CONSTRAINT_TYPE='FOREIGN KEY'";
                     Connect.Open();
 
                     SqlDataReader Reader = Query.ExecuteReader();
@@ -535,6 +536,59 @@ namespace WindowsFormsApplication1
             DialogResult dialogresult = Popup.ShowDialog();
             if (dialogresult == DialogResult.OK)
                 Popup.Dispose();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            string ConnectionString;
+            if (this.Connection_StringTextBox.Text.Trim() == "" || this.Connection_StringTextBox.ForeColor == Color.Red)
+            {
+                this.Connection_StringTextBox.Text = "Nie podano Connection Stringa!";
+                this.Connection_StringTextBox.ForeColor = Color.Red;
+            }
+            else
+            {
+                ConnectionString = this.Connection_StringTextBox.Text.Trim();
+                try
+                {
+
+                    Connect.ConnectionString = ConnectionString;
+                    Query.Connection = Connect;
+                    Query.CommandType = CommandType.Text;
+                    //Query.CommandText = "SELECT TABLE_SCHEMA, TABLE_NAME FROM INFORMATION_SCHEMA.TABLES ORDER BY TABLE_SCHEMA"; // Pobieranie listy tabel
+                    //Query.CommandText = "SELECT TABLE_NAME, CONSTRAINT_NAME FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE CONSTRAINT_TYPE='FOREIGN KEY'";
+
+                    Connect.Open();
+                    DataTable table = Connect.GetSchema("ForeignKeys");
+                   // SqlDataReader Reader = Query.ExecuteReader();
+                    foreach(System.Data.DataRow row in table.Rows)
+                    {
+                        listBox1.Items.Add(row["table_name"] + "." + row["constraint_name"]);
+                    }
+
+                   /* while (Reader.Read())
+                    {
+                        this.listBox1.Items.Add((Reader.GetValue(0).ToString() + "." + Reader.GetValue(1).ToString()));
+                        //TableElementList.Add((Reader.GetValue(0).ToString() + "." + Reader.GetValue(1).ToString()));
+                    }
+                   // this.TablesList.Enabled = true;
+                   // this.SearchTextBox.Enabled = true;*/
+                }
+                catch (Exception error)
+                {
+                    ShowErrorPopup(error.Message);
+                }
+                finally
+                {
+                    Connect.Close();
+                }
+            }
+
+
+
+
+
+            
         }
     }
 }
